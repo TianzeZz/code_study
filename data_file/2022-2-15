@@ -1,0 +1,35 @@
+ int search(vector<int>& nums, int target) {
+        int num= nums.size();
+        //cout<<num;
+        int begin=  0;
+        int end = num-1;
+        int middle = (begin+end)/2;
+        //cout<<middle;
+        while (1){
+            if (nums[middle]<target){
+                begin=middle;
+                middle=begin+(end-begin)/2;
+            }
+            else if (nums[middle]>target){
+                end=middle;
+                middle=begin+(end-begin)/2;
+            }
+            else if (nums[middle]==target){
+                return middle;
+            }
+            //cout<<middle;
+            if (middle==begin || middle==end){
+                if (nums[begin]==target){
+                    return begin;
+                }
+                else if (nums[end]==target){
+                    return end;
+                }
+                else {
+                    return -1;
+                }
+
+
+            }
+        }
+    }
