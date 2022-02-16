@@ -86,3 +86,29 @@ public:
         return squ;
     }
 };
+
+
+189. 轮转数组
+
+class Solution {
+public:
+    void swap(int& a , int& b){
+        int temp=a;
+        a=b;
+        b=temp;
+    }
+    void reverse(vector<int>& nums, int start , int end){
+        for(int i = 0;i<(end-start+1)/2; i++){
+            swap(nums[start+i],nums[end-i]);
+            //cout<<nums[0]<<nums[1]<<nums[2]<<nums[3]<<endl;
+        }
+    }
+
+    void rotate(vector<int>& nums, int k) {
+        k%=nums.size();
+        reverse(nums , 0, nums.size()-1);
+        reverse(nums , 0, k-1);
+        reverse(nums , k, nums.size()-1);
+    
+    }
+};
