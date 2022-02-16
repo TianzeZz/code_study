@@ -43,3 +43,46 @@ public:
         
     }
 };
+
+
+977. 有序数组的平方
+
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        vector<int> squ;
+        int mid;
+        int length = nums.size();
+        for (int i =0 ; i<length-1;i++){
+            if(nums[i]<0 && nums[i+1]>=0) {
+                mid=i+1;
+                break;
+            }
+            else if(nums[0]>=0) mid=0;
+            else mid =length-1;
+        }
+        int x = mid;
+        int y = mid-1;
+        while(x<length || y>=0){
+            if(x<length && y==-1){
+                squ.push_back(nums[x]*nums[x]);
+                x+=1;
+            }
+            else if (x==length && y>-1){
+                squ.push_back(nums[y]*nums[y]);
+                y-=1;
+            }
+            else if (nums[y]*nums[y]<=nums[x]*nums[x]){
+                squ.push_back(nums[y]*nums[y]);
+                y-=1;
+            }
+            else{
+                squ.push_back(nums[x]*nums[x]);
+                x+=1;
+            }
+    
+        }
+
+        return squ;
+    }
+};
