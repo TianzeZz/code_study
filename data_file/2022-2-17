@@ -205,3 +205,37 @@ public:
     }
 };
 这里主要是利用环状结构分别分析从1开始或者不从1开始（即从2，3开始）的情况
+
+740. 删除并获得点数
+class Solution {
+public:
+    int max (int a,int b){
+        return a>b?a:b;
+    }
+    int deleteAndEarn(vector<int>& nums) {
+        int max_num=0;
+        for(int var:nums ){
+            if(var>max_num) max_num=var;
+        }
+        vector<int> calcu(max_num+1);
+        for(int var:nums) calcu[var]+=var;
+
+        if (max_num==1){
+            return calcu[1];
+        }
+        else if(max_num==2){
+            return max(calcu[2],calcu[1]);
+        }
+        
+        int left =calcu[1];
+        int right =max(calcu[2],calcu[1]);
+        int temp=right;
+        for (int i=3;i<=max_num;i++){
+            temp = max(left+calcu[i],right);
+            left = right;
+            right =temp;
+        }
+        return temp;
+    }
+};
+相比打家劫舍1加入了哈希表，其余无变化
