@@ -1,0 +1,207 @@
+283. 移动零
+
+class Solution {
+public:
+/*
+    void back_move(vector<int>& nums,int i,int k) {
+        int temp= nums[i];
+        for (int j =i+1;j<=k;j++){
+            nums[j-1]=nums[j];
+        }
+        nums[k]=temp;
+    }
+    void moveZeroes(vector<int>& nums) {
+        int k=nums.size()-1;
+        int i = 0;
+        while(i<k){
+            if (i==k){
+                break;
+            }
+            else if (nums[k]==0){
+                k-=1;
+            }
+            else if (nums[i]==0){
+                back_move(nums,i,k);
+                k-=1;
+            }
+            else{
+                i+=1;
+            }
+            //cout<<nums[0]<<nums[1]<<nums[2]<<i<<k;
+        }
+    }
+    */
+    void swap(int& a , int& b){
+        int temp=a;
+        a=b;
+        b=temp;
+    }
+    void moveZeroes(vector<int>& nums) {
+        int k=nums.size()-1;
+        int i = 0;
+        int j = 0;
+        while(j<=k){
+            if(nums[j]!=0){
+                swap(nums[j],nums[i]);
+                i+=1;
+            }
+            j+=1;
+            
+        }
+    }
+};
+
+167. 两数之和 II - 输入有序数组
+
+class Solution {
+public:
+/*
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        int k=numbers.size();
+        if (k==1){
+            cout<<"error input"<<endl;
+        }
+        int left = 0;
+        int right = 1;
+        vector<int> index;
+        while(left<k-1){
+            if ((numbers[left]+numbers[right]<target) && (left==k-1)){
+                cout<<"error input"<<endl;
+            }
+            else if((numbers[left]+numbers[right]!=target) &&( numbers[left]==numbers[right])){
+                left+=1;
+                right=left+1;
+            }
+            else if ((numbers[left]+numbers[right]<target) &&( right<k-1)){
+                right+=1;
+            }
+            else if ((numbers[left]+numbers[right]<target )&& (right==k-1)){
+                left+=1;
+                right=left+1;
+            }
+            else if(numbers[left]+numbers[right]>target){
+                left+=1;
+                right=left+1;
+            }
+            else if(numbers[left]+numbers[right]==target){
+                index.push_back(left+1);
+                index.push_back(right+1);
+                break;
+            }
+        }
+        return index;
+    }
+    */
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        int k=numbers.size();
+        if (k==1){
+            cout<<"error input"<<endl;
+        }
+        int left = 0;
+        int right = k-1;
+        vector<int> index;
+        while(left <right){
+            if(numbers[left]+numbers[right]>target){
+                right--;
+            }
+            else if(numbers[left]+numbers[right]<target){
+                left++;
+            }
+            else if(numbers[left]+numbers[right]==target){
+                index.push_back(left+1);
+                index.push_back(right+1);
+                break;
+            }
+        }
+        
+        return index;
+    }
+};
+
+198. 打家劫舍
+class Solution {
+public:
+    int max (int a,int b){
+        return a>b?a:b;
+    }
+    int max1 (int a,int b,int c){
+        if((a>=b) &&( a>=c)) return a;
+        else if ((b>=a) &&( b>=c)) return b;
+        else return c;
+    }
+    int rob(vector<int>& nums) {
+        int house = nums.size()-1;
+        if (house==0){
+            return nums[0];
+        }
+        else if(house==1){
+            return max(nums[0],nums[1]);
+        }
+        else if(house==2){
+            return max(nums[0]+nums[2],nums[1]);
+        }
+        int left =nums[0];
+        int middle =nums[1];
+        int right = max(nums[0]+nums[2],nums[1]);
+        int temp=0;
+        for (int i=3;i<=house;i++){
+            temp = max1(left+nums[i],middle+nums[i],right);
+            left = middle;
+            middle = right;
+            right =temp;
+        }
+        return temp;
+    }
+};
+这里巧妙的利用了：
+细心的我们发现： 难道在前 nn 间的最高金额 dp[n]dp[n] 情况下，第 nn 间一定被偷了吗？假设没有被偷，那 n+1n+1 间的最大值应该也可能是 dp[n+1] = dp[n] + numdp[n+1]=dp[n]+num 吧？其实这种假设的情况可以被省略，这是因为：
+
+假设第 nn 间没有被偷，那么此时 dp[n] = dp[n-1]dp[n]=dp[n−1] ，此时 dp[n+1] = dp[n] + num = dp[n-1] + numdp[n+1]=dp[n]+num=dp[n−1]+num ，即两种情况可以 合并为一种情况 考虑；
+假设第 nn 间被偷，那么此时 dp[n+1] = dp[n] + numdp[n+1]=dp[n]+num 不可取 ，因为偷了第 nn 间就不能偷第 n+1n+1 间。
+
+作者：jyd
+链接：https://leetcode-cn.com/problems/house-robber/solution/da-jia-jie-she-dong-tai-gui-hua-jie-gou-hua-si-lu-/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+
+因此，对于下题有：
+
+213. 打家劫舍 II
+
+class Solution {
+public:
+    int max (int a,int b){
+        return a>b?a:b;
+    }
+    int rob(vector<int>& nums) {
+        int house = nums.size()-1;
+        if (house==0){
+            return nums[0];
+        }
+        else if(house==1){
+            return max(nums[0],nums[1]);
+        }
+        else if(house==2){
+            int a=max(nums[0],nums[1]);
+            return max(a,nums[2]);
+        }
+        int left =nums[0];
+        int right =nums[0]+nums[2];
+        int temp1=right;
+        for (int i=3;i<=house-1;i++){
+            temp1 = max(left+nums[i],right);
+            left = right;
+            right =temp1;
+        }
+        left =nums[1];
+        right =max(nums[2],nums[1]);
+        int temp2=right;
+        for (int i=3;i<=house;i++){
+            temp2 = max(left+nums[i],right);
+            left = right;
+            right =temp2;
+        }
+        return max(temp1,temp2);
+    }
+};
+这里主要是利用环状结构分别分析从1开始或者不从1开始（即从2，3开始）的情况
