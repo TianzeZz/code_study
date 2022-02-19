@@ -1,0 +1,189 @@
+876. 链表的中间结点
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        ListNode* middle=head;
+        ListNode* last=head;
+        int i;
+        while(last->next!=NULL){
+            if (last->next != NULL){
+                last=last->next;
+                middle=middle->next;
+            }
+            else break;
+            if (last->next != NULL){
+                last=last->next;
+            }
+        }
+        return middle;
+    }
+};
+
+19. 删除链表的倒数第 N 个结点
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* dummyHead = new ListNode(0);
+        dummyHead->next = head;
+        ListNode* before=dummyHead;
+        ListNode* last=dummyHead;
+        for (int i =0 ;i<n;i++){
+            last=last->next;
+        }
+        while(last->next != NULL){
+            last = last->next;
+            before= before->next;
+        }
+        before->next=before->next->next;
+        ListNode* ans = dummyHead->next;
+        delete dummyHead;
+
+        return ans;
+    }
+};
+
+53. 最大子数组和
+
+class Solution {
+public:
+    int max(int a ,int b){
+        return a>b?a:b;
+    }
+    int maxSubArray(vector<int>& nums) {
+        
+        if (nums.size()==1){
+            return nums[0];
+        }
+        int left=nums[0];
+        int right=nums[0];
+        int max1=left;
+        for(int i = 1;i<nums.size();i++){
+            left=right;
+            if(left+nums[i]>=nums[i]){
+                right= left+nums[i];
+            }
+            else{
+                right=nums[i];
+            }
+            max1 = max(right,max1);
+        }
+        return max1;
+    }
+};
+
+918. 环形子数组的最大和
+
+class Solution {
+public:
+    int max(int a ,int b){
+        return a>b?a:b;
+    }
+    int maxSubarraySumCircular(vector<int>& nums) {
+        int total = 0, maxSum = nums[0], curMax = 0, minSum = nums[0], curMin = 0;
+        for (int& a : nums) {
+            curMax = max(curMax + a, a);
+            maxSum = max(maxSum, curMax);
+            curMin = min(curMin + a, a);
+            minSum = min(minSum, curMin);
+            total += a;
+        }
+        return maxSum > 0 ? max(maxSum, total - minSum) : maxSum;
+
+        /*
+        if (nums.size()==1){
+            return nums[0];
+        }
+        int left=nums[0];
+        int right=nums[0];
+        bool second=false;
+        int max_num=0;
+        int length=1;
+        int max1=left;
+        for(int i = 1;i<nums.size();i++){
+            left=right;
+            if(second==true && i == max_num){
+                break;
+            }
+
+            if(length<nums.size()){
+                if(left+nums[i]>nums[i]){
+                    right= left+nums[i];
+                    length++;
+                    if (max1<=right) {
+                        max1=right;
+                        max_num=i;
+                    }
+                }
+                else{
+                    right=nums[i];
+                    length=1;
+                    if (max1<=right){
+                        max1=right;
+                        
+                        if(second==false) max_num=i;
+                    }
+                }  
+            }
+            else if(length>=nums.size()){
+                if(left-nums[i+1]>=nums[i]){
+                    right= left-nums[i+1];
+                    length--;
+                    if (max1<right) max1=right;
+                }
+                else{
+                    right=nums[i];
+                    if (max1<right){
+                        max1=right;
+                        length=1;
+                    }
+                }  
+            }
+
+            if (i==nums.size()-1 && second == false){
+                i=0;
+                second=true;
+            }
+        }
+        
+        return max1;
+        */
+    }
+};
+
+第一种情况：这个子数组不是环状的，就是说首尾不相连。
+第二种情况：这个子数组一部分在首部，一部分在尾部，我们可以将这第二种情况转换成第一种情况
+
+证明一下第二种情况（最大子数组是环形的）
+max(前缀数组+后缀数组)
+= max(数组总和 - subarray) subarray指的是前缀数组和后缀数组中间的数组
+= 数组总和 + max(-subarray) 数组总和是不变的，直接提出来
+= 数组总和 - min(subarry) 。。。这个都懂吧，把负号提出来，max变成min
+
+极端情况：如果说这数组的所有数都是负数，那么上面的公式还需要变一下，因为这种情况，对于上面的第一种情况sum会等于数组中的最大值，而对二种情况sum=0（最小的子数组就是本数组，total-total=0）。所以多加一个case，判断最大子数组和是否小于0，小于0，直接返回该maxSubArray
+
+作者：xing-you-ji
+链接：https://leetcode-cn.com/problems/maximum-sum-circular-subarray/solution/wo-hua-yi-bian-jiu-kan-dong-de-ti-jie-ni-892u/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
