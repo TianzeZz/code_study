@@ -1,0 +1,34 @@
+
+
+838. 推多米诺
+
+class Solution {
+public:
+    string pushDominoes(string dominoes) {
+        int x= dominoes.length();
+        int left_point = 0;
+        int right_point = 0;
+        for (int i = 0;i<x;i++){
+            if(dominoes[i]!='.'){
+                left_point = right_point;
+                right_point = i;
+                if(dominoes[left_point]=='R' && dominoes[right_point]=='L'){
+                    int a=left_point,b=right_point;
+                    while(a<b){
+                        dominoes[a++]='R';dominoes[b--]='L';
+                    }
+                }
+                else if (dominoes[right_point]=='L' && dominoes[left_point]!='R'){
+                    for(int j = left_point;j<right_point;j++) dominoes[j]='L';
+                }
+                else if (dominoes[right_point]=='R' && dominoes[left_point]=='R'){
+                    for(int j = left_point;j<right_point;j++) dominoes[j]='R';
+                }
+            }
+        }
+        if(dominoes[x-1]=='.' && dominoes[right_point]=='R'){
+            for(int j = right_point;j<x;j++) dominoes[j]='R';
+        }
+        return dominoes;
+    }
+};
