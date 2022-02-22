@@ -1,0 +1,141 @@
+
+733. 图像渲染
+
+class Solution {
+public:
+    const int sum_x[4] = {1,0,0,-1};
+    const int sum_y[4] = {0,1,-1,0};
+    void dfs(vector<vector<int>>& image, int x, int y, int newColor,int curColor){
+        image[x][y]=newColor;
+        for(int i = 0;i<4;i++){
+            int mx = x+sum_x[i], my= y +sum_y[i];
+            if(mx>=0 && my>=0 && mx<image.size() && my<image[0].size() && image[mx][my]==curColor){
+                dfs(image,mx,my,newColor,curColor);
+            }
+        }
+    }
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+
+        int curColor = image[sr][sc];
+        if(curColor == newColor) return image;
+        dfs(image,sr,sc,newColor,curColor);
+        return image;
+    }
+};
+
+695. 岛屿的最大面积
+
+class Solution {
+public:
+    const int sum_x[4] = {1,0,0,-1};
+    const int sum_y[4] = {0,1,-1,0};
+
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int ans = 0;
+        int m = grid.size();
+        int n = grid[0].size();
+        for(int i = 0 ;i<m; i++ ){
+            for(int j = 0; j<n; j++ ){
+                if(grid[i][j]==0){
+                    continue;     
+                }
+                int cur=0;
+                stack<int> stackx;
+                stack<int> stacky;
+                stackx.push(i);
+                stacky.push(j);
+                while(!stackx.empty()){
+                    int cur_x = stackx.top();
+                    int cur_y = stacky.top();
+                    stackx.pop();
+                    stacky.pop();
+                    grid[cur_x][cur_y]=0;
+                    cur++;
+                    for(int k = 0;k<4;k++){
+                        int mx = cur_x+sum_x[k],my = cur_y+sum_y[k];
+                        if(mx>=0  && my>=0 && mx<m && my<n && grid[mx][my]==1 ){
+                            stackx.push(mx);stacky.push(my);
+                            grid[mx][my]=0;
+                        }
+                    }
+                }
+                
+                ans = max(ans,cur);
+            }
+        }
+        return ans;
+    }
+};
+
+1014. 最佳观光组合
+
+class Solution {
+public:
+    int maxScoreSightseeingPair(vector<int>& values) {
+        int left_max,right_max = values[0]+values[1]-1;
+        int left_dis,right_dis =1;
+        int ans=right_max;
+        for(int i = 2; i<values.size();i++){
+            left_max=right_max;
+            left_dis=right_dis;
+            if(values[i]+values[i-1]-1<values[i]+values[i-left_dis-1]-left_dis-1){
+                right_max = values[i]+values[i-left_dis-1]-left_dis-1;
+                right_dis+=1;
+            }
+            else{
+                 right_max=values[i]+values[i-1]-1;
+                 right_dis=1;
+            }
+            ans =max(ans,right_max);
+
+        }
+        return ans;
+    }
+};
+
+121. 买卖股票的最佳时机
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.size()<2 ){
+            return 0;
+        }
+        int left_min,right_min = min( prices[1],prices[0]);
+        int ans=prices[1]>prices[0]?prices[1]-prices[0]:0;
+        for(int i = 2; i<prices.size();i++){
+            left_min=right_min;
+            right_min = min(left_min,prices[i]);
+            ans =max(ans,prices[i]-left_min);
+
+        }
+        return ans;
+    }
+};
+
+122. 买卖股票的最佳时机 II
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(prices.size()<2 ) return 0;
+        int left_get,right_get = prices[1]>prices[0]?prices[1]-prices[0]:0;
+        if(prices.size()==2) return right_get;
+        int left_min,right_min = min( prices[1],prices[0]);
+        int ans=0;
+        for(int i = 2; i<prices.size();i++){
+            left_min=right_min;
+            left_get=right_get;
+            if(prices[i]-left_min<left_get){
+                right_min = prices[i];
+                right_get = 0;
+                ans+=left_get;
+            }
+            else if (prices[i]-left_min>left_get){
+                right_get = prices[i]-left_min;
+            }
+
+        }
+        return ans+right_get;
+    }
+};
