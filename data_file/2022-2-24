@@ -1,0 +1,154 @@
+
+542. 01 矩阵
+
+class Solution {
+public:
+    static constexpr int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
+        vector<vector<int>> dis(mat.size(),vector<int>(mat[0].size()));
+        vector<vector<int>> already(mat.size(),vector<int>(mat[0].size()));
+        queue<pair<int, int>> q;
+        for(int i = 0;i<mat.size();i++){
+            for (int j = 0 ;j<mat[0].size();j++){
+                if(mat[i][j]==0){
+                    q.emplace(i,j);
+                    dis[i][j] = 0;
+                    already[i][j] =1;
+                }
+            }
+        }
+
+        while(!q.empty()){
+            auto [i, j] = q.front();
+            q.pop();
+            for (int d = 0; d < 4; ++d) {
+                int ni = i + dirs[d][0];
+                int nj = j + dirs[d][1];
+                if (ni >= 0 && ni < mat.size() && nj >= 0 && nj < mat[0].size() && !already[ni][nj]) {
+                    dis[ni][nj] = dis[i][j] + 1;
+                    q.emplace(ni, nj);
+                    already[ni][nj] = 1;
+                }
+            }
+        }
+        return dis;
+
+    }
+};
+
+994. 腐烂的橘子
+
+class Solution {
+public:
+    static constexpr int dirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int orangesRotting(vector<vector<int>>& grid) {
+        queue<pair<int, int>> q1;
+        queue<pair<int, int>> q2;
+        int time = 0;
+        for(int i  = 0;i<grid.size();i++){
+            for(int j = 0;j<grid[0].size();j++){
+                if(grid[i][j] ==2){
+                    q1.emplace(i,j);
+                }
+            }
+        }
+        while(!q1.empty() || !q2.empty()){
+            if(!q1.empty() && time%2==0){
+                auto [i,j]= q1.front();
+                q1.pop();
+                for (int d = 0; d < 4; ++d) {
+                    int ni = i + dirs[d][0];
+                    int nj = j + dirs[d][1];
+                    if (ni >= 0 && ni < grid.size() && nj >= 0 && nj < grid[0].size() && grid[ni][nj]==1) {
+                        grid[ni][nj] = 2;
+                        q2.emplace(ni, nj);
+                    }
+                }
+            }
+            else if(!q2.empty()&& time%2==1){
+                auto [i,j]= q2.front();
+                q2.pop();
+                for (int d = 0; d < 4; ++d) {
+                    int ni = i + dirs[d][0];
+                    int nj = j + dirs[d][1];
+                    if (ni >= 0 && ni < grid.size() && nj >= 0 && nj < grid[0].size() && grid[ni][nj]==1) {
+                        grid[ni][nj] = 2;
+                        q1.emplace(ni, nj);
+                    }
+                }
+            }
+            else if(q1.empty() && !q2.empty()){
+                time+=1;
+            }
+            else if(q2.empty() && !q1.empty()){
+                time+=1;
+            }
+            
+        }
+        for(int i  = 0;i<grid.size();i++){
+            for(int j = 0;j<grid[0].size();j++){
+                if(grid[i][j] ==1){
+                    time=-1;
+                }
+            }
+        }
+        return time;
+
+    }
+};
+
+139. 单词拆分
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> dic;
+        for (string word:wordDict){
+            dic.insert(word);
+        }
+        vector<bool> x(s.size()+1);
+        vector<bool> y(s.size()+1);
+        y[0] = true;
+        for(int i = 0;i<=s.size();i++){
+            x=y;
+            for(int j  = 0; j<i; j++){
+                if(x[j] == true && dic.find(s.substr(j,i-j))!= dic.end()){
+                    
+                    y[i] = true;
+                }
+            }
+        }
+
+        return y[s.size()];
+    }
+};
+
+42. 接雨水
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int leftmax=height[0],rightmax=height[height.size()-1];
+        int left=0,right = height.size()-1;
+        int water=0;
+        while(left<right){
+            if(leftmax>=rightmax){
+                right--;
+                if(height[right]<=rightmax && right!=left){
+                    water+=rightmax-height[right];
+                }
+                else if(height[right]>rightmax && right!=left) rightmax = height[right];
+            }
+            else if(leftmax<rightmax){
+                left++;
+                if(height[left]<=leftmax && right!=left){
+                    water+=leftmax-height[left];
+                }
+                else if(height[left]>leftmax && right!=left) leftmax = height[left];
+            }
+        }
+        return water;
+    }
+};
+
+https://leetcode-cn.com/problems/trapping-rain-water/solution/jie-yu-shui-by-leetcode-solution-tuvc/
