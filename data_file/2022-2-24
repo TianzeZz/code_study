@@ -152,3 +152,40 @@ public:
 };
 
 https://leetcode-cn.com/problems/trapping-rain-water/solution/jie-yu-shui-by-leetcode-solution-tuvc/
+
+1706. 球会落何处
+
+class Solution {
+public:
+    vector<int> findBall(vector<vector<int>>& grid) {
+        vector<int> ball(grid[0].size());
+        for(int i = 0;i<grid[0].size();i++){
+            int k  = i;
+            for(int j = 0; j<grid.size();j++){
+                if(k<grid[0].size()-1){
+                    if(grid[j][k]==1 && grid[j][k+1]==-1){
+                        ball[i] = -1;
+                        break;
+                    }
+                }
+                if(k>0){
+                    if(grid[j][k]==-1 &&grid[j][k-1]==1){
+                        ball[i] = -1;
+                        break;
+                    }
+                }
+                if(k+grid[j][k]>=grid[0].size() || k+grid[j][k]<0  ){
+                    ball[i] = -1;
+                    break;
+                }
+                else{ 
+                    k+=grid[j][k];
+                    ball[i] = k;
+                }
+                
+            }
+            
+        }
+        return ball;
+    }
+};
