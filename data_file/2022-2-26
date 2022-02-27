@@ -1,0 +1,45 @@
+120. 三角形最小路径和
+
+class Solution {
+public:
+    int minimumTotal(vector<vector<int>>& triangle) {
+        int f[triangle.size()];
+        f[0] = triangle[0][0];
+        for(int i = 1;i<triangle.size();i++){
+            f[i] = f[i-1]+triangle[i][i];
+            for(int j = i-1; j>=1 ; j--){
+                f[j] = min(f[j]+triangle[i][j],f[j-1]+triangle[i][j]);
+            }
+            f[0] =  f[0]+triangle[i][0];
+            //cout<<f[0]<<" "<<f[1]<<" "<<f[2]<<endl;
+        }
+        int ans = f[0];
+        for(int i = 1;i<triangle.size();i++){
+            ans = min(f[i],ans);
+        }
+        return ans;
+    }
+};
+
+2016. 增量元素之间的最大差值
+class Solution {
+public:
+    int maximumDifference(vector<int>& nums) {
+        int max1 = max(nums[1]-nums[0],0);
+        int left_min=min(nums[0],nums[1]);
+        for(int i = 2;i<nums.size();i++){
+            if(left_min>nums[i]){
+                left_min = nums[i];
+            }
+            else{
+                max1=max(max1 , nums[i]-left_min);
+            }
+        }
+        if(max1 ==0){
+            max1 =-1;
+        }
+        return max1;
+    }
+};
+
+
