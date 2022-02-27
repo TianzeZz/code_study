@@ -1,0 +1,148 @@
+
+264. 丑数 II
+
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        int ugly=0,ugly2=0,ugly3=0;
+        int newugly[n];
+        newugly[0] =1;
+        for(int i =1;i<n;i++){
+            newugly[i] = min(newugly[ugly]*2,min(newugly[ugly2]*3,newugly[ugly3]*5));
+            if(newugly[ugly]*2==newugly[i] ){
+                ugly++;
+            }
+            if(newugly[ugly2]*3==newugly[i]){
+                ugly2++;
+            }
+            if(newugly[ugly3]*5==newugly[i]){
+                ugly3++;
+            }
+        }
+        return newugly[n-1];
+    }
+};
+
+96. 不同的二叉搜索树
+
+class Solution {
+public:
+    int numTrees(int n) {
+        if(n <=2){
+            return n;
+        }
+        int dp[n+1];
+        dp[0] = 1;
+        dp[1] = 1;
+        dp[2] = 2;
+        for(int i = 3;i<=n;i++){
+            dp[i] = 0;
+            for(int j = 0;j<i;j++){
+                dp[i]+= dp[j]*dp[i-j-1];
+            }
+        }
+        return dp[n];
+    }
+};
+
+77. 组合
+
+class Solution {
+public:
+    vector<int> temp;
+    vector<vector<int>> ans;
+    void dfs(int cur, int n, int k) {
+        // 剪枝：temp 长度加上区间 [cur, n] 的长度小于 k，不可能构造出长度为 k 的 temp
+        if (temp.size() + (n - cur + 1) < k) {
+            return;
+        }
+        // 记录合法的答案
+        if (temp.size() == k) {
+            ans.push_back(temp);
+            return;
+        }
+        // 考虑选择当前位置
+        temp.push_back(cur);
+        dfs(cur + 1, n, k);
+        temp.pop_back();
+        // 考虑不选择当前位置
+        dfs(cur + 1, n, k);
+    }
+
+    vector<vector<int>> combine(int n, int k) {
+        dfs(1, n, k);
+        return ans;
+    }
+
+};
+
+46. 全排列
+
+class Solution {
+public:
+    void do_job(vector<vector<int>> & ans,vector<int>& out,int first,int len ){
+        if(first == len){
+            ans.push_back(out);
+        }
+        for(int i = first;i<len;i++){
+            swap(out[i],out[first]);
+            do_job(ans,out , first+1,len);
+            swap(out[i],out[first]);
+        }
+    }
+
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> ans;
+        do_job(ans,nums , 0,nums.size());
+        return ans;
+    }
+};
+
+784. 字母大小写全排列
+
+class Solution {
+public:
+    void change(vector<string>& ans , string s,int first,int len){
+        for(int i= first;i<=len;i++){
+            if(i==len){
+                ans.push_back(s);
+            }
+            if (int(s[i])<60) continue;
+            else if(int(s[i])<91) {
+                s[i]+=32;
+                change(ans,s,i+1,s.size());
+                s[i]-=32;
+            }
+            else if(int(s[i])>91) {
+                s[i]-=32;
+                change(ans,s,i+1,s.size());
+                s[i]+=32;
+            }
+        }
+    }
+    vector<string> letterCasePermutation(string s) {
+        vector<string> ans;
+        change(ans,s,0,s.size());
+        return ans;
+    }
+};
+
+553. 最优除法
+
+class Solution {
+public:
+    string optimalDivision(vector<int>& nums) {
+        if(nums.size() ==1){
+            return to_string(nums[0]);
+        }
+        else if(nums.size() ==2){
+            return to_string(nums[0])+"/"+to_string(nums[1]);
+        }
+        string ans=to_string(nums[0])+"/("+to_string(nums[1]);
+        for(int i = 2;i<nums.size();i++){
+            ans+="/"+to_string(nums[i]);
+        }
+        ans+=")";
+        return ans;
+    }
+};
