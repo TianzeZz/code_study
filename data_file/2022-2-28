@@ -1,0 +1,73 @@
+191. 位1的个数
+
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        int ret = 0;
+        for (int i = 0; i < 32; i++) {
+            if (n & (1 << i)) {
+                ret++;
+            }
+        }
+        return ret;
+    }
+};
+
+231. 2 的幂
+class Solution {
+public:
+    bool isPowerOfTwo(int n) {
+        int i = 0;
+        if(n<=0){
+            return false;
+        }
+        while((1<<i)<n){
+            if(n & 1<<i++){
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+1601. 最多可达成的换楼请求数目
+class Solution {
+public:
+    int cnt=0;
+    int ans=0;
+    int zero;
+    void dfs(vector<vector<int>>& requests,vector<int>& inout,int num){
+        if(num == requests.size() ){
+            if(zero == inout.size()){
+                ans = max(ans,cnt);   
+            }
+            return;
+        }
+
+        dfs(requests,inout,num+1);
+        int z =zero;
+        zero-= inout[requests[num][0]]==0;
+        inout[requests[num][0]]--;
+        zero+= inout[requests[num][0]]==0;
+        cnt++;
+        zero-= inout[requests[num][1]]==0;
+        inout[requests[num][1]]++;
+        zero+= inout[requests[num][1]]==0;
+
+        dfs(requests,inout,num+1);
+
+        inout[requests[num][1]]--;
+        cnt--;
+        inout[requests[num][0]]++;
+        zero=z;
+
+    }
+
+    int maximumRequests(int n, vector<vector<int>>& requests) {
+        vector<int> inout;
+        inout.resize(n);
+        zero = n;
+        dfs(requests,inout,0);
+        return ans;
+    }
+};
