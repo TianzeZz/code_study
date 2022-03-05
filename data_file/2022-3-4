@@ -1,0 +1,76 @@
+62. 不同路径
+class Solution {
+public:
+    int uniquePaths(int m, int n) {
+        vector<int> row;
+        row.resize(m);
+        for(int i = 0;i<m;i++){
+            row[i]=1;
+        }
+        for(int i = 1; i<n;i++){
+            for(int j=1;j<m;j++){
+                row[j] +=row[j-1]; 
+            }
+        }
+        return row[m-1];
+    }
+};
+
+63. 不同路径 II
+
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        vector<int> row;
+        vector<int> new_row;
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
+        row.resize(m);
+        new_row.resize(m);
+        for(int i = 0;i<m;i++){
+            if(obstacleGrid[i][0] == 1){
+                break;
+            }
+            new_row[i] = 1;
+        }
+        for(int i = 1; i < n;i++){
+            row = new_row;
+            if(obstacleGrid[0][i] == 1){
+                new_row[0] = 0;
+            }
+            for(int j = 1;j < m;j++){
+                if(obstacleGrid[j][i] == 1){
+                    new_row[j] = 0;
+                }
+                else {
+                    new_row[j] = row[j]+ new_row[j-1];
+                }
+            }
+        }
+        return new_row[m-1];
+    }
+};
+
+2104. 子数组范围和
+
+class Solution {
+public:
+    long long subArrayRanges(vector<int>& nums) {
+        int max1;
+        int min1;
+        long long ans = 0;
+        for(int i = 0;i < nums.size() ; i++){
+            max1 = nums[i];
+            min1 = nums[i];
+            for(int j =i-1 ;j >=0 ; j--){
+                max1 = max(nums[j],max1);
+                min1 = min(nums[j],min1);
+                ans+= max1-min1;
+            }
+        }
+        return ans;
+    }
+};
+
+单调栈解法
+https://leetcode-cn.com/problems/sum-of-subarray-ranges/solution/zi-shu-zu-fan-wei-he-by-leetcode-solutio-lamr/
