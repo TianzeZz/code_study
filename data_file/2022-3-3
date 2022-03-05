@@ -1,0 +1,77 @@
+1314. 矩阵区域和
+
+class Solution {
+public:
+    int get_edge(vector<vector<int>>& P, int m,int n,int x, int y){
+        y = max(-1,min(y,n-1));
+        x = max(-1,min(x,m-1));
+        return P[x+1][y+1];
+    }
+
+    vector<vector<int>> matrixBlockSum(vector<vector<int>>& mat, int k) {
+        int m  = mat.size();
+        int n  = mat[0].size();
+        vector<vector<int>> P(m+1,vector<int>(n+1));
+        for (int i = 1;i<=m;i++){
+            for(int j = 1;j<=n;j++){
+                P[i][j] = P[i-1][j]+P[i][j-1]-P[i-1][j-1]+mat[i-1][j-1];
+            }
+        }
+        vector<vector<int>> ans(m,vector<int>(n));
+         for (int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){
+                ans[i][j] = get_edge(P,m,n,i+k,j+k) - get_edge(P,m,n,i-k-1,j+k) -get_edge(P,m,n,i+k,j-k-1)+ get_edge(P,m,n,i-k-1,j-k-1);
+            }
+         }
+         return ans;
+
+    }
+};
+
+304. 二维区域和检索 - 矩阵不可变
+
+private:
+    
+    vector<vector<int>> mat;
+public:
+    vector<vector<int>> p;
+    NumMatrix(vector<vector<int>>& matrix) {
+        int m = matrix.size();
+        int n = matrix[0].size();
+        mat.resize(m,vector<int> (n));
+        p.resize(m+1,vector<int> (n+1));
+        for (int i = 0;i<m;i++){
+            for(int j = 0;j<n;j++){
+                mat[i][j] = matrix[i][j];
+                p[i+1][j+1] =p[i][j+1]+p[i+1][j]-p[i][j]+mat[i][j];
+            }
+        }
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2) {
+        return p[row2+1][col2+1]-p[row1][col2+1]-p[row2+1][col1]+p[row1][col1];
+    }
+};
+
+/**
+ * Your NumMatrix object will be instantiated and called as such:
+ * NumMatrix* obj = new NumMatrix(matrix);
+ * int param_1 = obj->sumRegion(row1,col1,row2,col2);
+ */
+ 
+ 二维前缀和讲解
+ https://leetcode-cn.com/problems/matrix-block-sum/solution/ju-zhen-qu-yu-he-by-leetcode-solution/
+ 
+ 258. 各位相加
+ 
+ class Solution {
+public:
+    int addDigits(int num) {
+        if (num==0) return 0;
+        else if (num%9 == 0) return 9;
+        return num%9;
+    }
+};
+
+数学解法
+https://leetcode-cn.com/problems/add-digits/solution/ge-wei-xiang-jia-by-leetcode-solution-u4kj/
