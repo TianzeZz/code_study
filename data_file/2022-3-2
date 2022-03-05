@@ -1,0 +1,131 @@
+118. 杨辉三角
+
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> ans;
+        vector<int> n;
+        n.push_back(1);
+        ans.push_back(n);
+        for(int i = 1;i<numRows;i++){
+            vector<int> k;
+            k.push_back(ans[i-1][0]);
+            for(int j = 1;j<i;j++){
+                k.push_back(ans[i-1][j-1]+ans[i-1][j]);
+            }
+            k.push_back(ans[i-1][i-1]);
+            ans.push_back(k);
+        }
+        return ans;
+    }
+};
+
+119. 杨辉三角 II
+
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+        vector<int> n;
+        n.push_back(1);
+        for(int i = 1;i<=rowIndex;i++){
+            n.push_back(1);
+            for(int j = i;j>1;j--){
+                n[j-1] = n[j-1]+n[j-2];
+            }
+        }
+        return n;
+    }
+};
+
+931. 下降路径最小和
+
+class Solution {
+public:
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        vector<int> row = matrix[0];
+        vector<int> new_row = matrix[0];
+        int n = matrix.size();
+        if(n == 1)return matrix[0][0];
+        for(int i=1;i<n;i++){
+            row =new_row;
+            new_row[0] = min(row[0],row[1])+matrix[i][0];
+            for(int j = 1;j<n-1;j++){
+                new_row[j] = min(min(row[j-1],row[j]),row[j+1])+matrix[i][j];
+            }
+            new_row[n-1] = min(row[n-1],row[n-2])+matrix[i][n-1];
+        }
+        int ans = min(new_row[0],new_row[1]);
+        for(int i=1;i<n;i++){
+            ans = min(new_row[i],ans);
+        }
+        return ans;
+    }
+};
+
+564. 寻找最近的回文数class Solution {
+public:
+    vector<long> getPossibleNums(const string& n){
+        int length = n.size();
+        vector<long> possibleAns = {
+            (long)pow(10,length-1)-1,
+            (long)pow(10,length)+1,
+        };
+        long nums = stol(n.substr(0, (length+ 1) / 2));
+        for(long i :{nums+1,nums,nums-1} ){
+            string j  = to_string(i);
+            string j1= j + string(j.rbegin()+(length & 1) ,j.rend() );
+            long  k = stol(j1);
+            possibleAns.push_back(k) ;
+        }
+        return possibleAns;
+    }
+    string nearestPalindromic(string n) {
+        vector<long>  possibleAns= getPossibleNums(n);
+        long a = stol(n);
+        long sub = abs(a-possibleAns[0]);
+        long ans  = possibleAns[0];
+        //cout<<possibleAns[0];
+        for(long i :possibleAns){
+            if(i != a){
+                if(sub>abs(a-i) ||(sub == abs(a-i) && i<a )){
+                    sub =  abs(a-i);
+                    ans = i;
+                } 
+            }
+        }
+        return to_string(ans);
+
+
+    }
+};
+
+构造回文整数有一个直观的方法：用原数的较高位的数字替换其对应的较低位。例如，对于数 1234512345，我们可以用 11 替换 55，用 22 替换 44，这样原数即变为回文整数 1232112321。
+
+在这种方案中，我们修改的都是较低位的数字，因此构造出的新的整数与原数较为接近。大部分情况下，这种方案是最优解，但还有部分情况我们没有考虑到。
+
+构造的回文整数大于原数时，我们可以减小该回文整数的中间部分来缩小回文整数和原数的差距。例如，对于数 9932199321，我们将构造出回文整数 9939999399，实际上 9929999299 更接近原数。
+
+当我们减小构造的回文整数时，可能导致回文整数的位数变化。例如，对于数 100100，我们将构造出回文整数 101101，减小其中间部分将导致位数减少。得到的回文整数形如 999\dots 999999…999（10^{\textit{len}}-110 
+len
+ −1）。
+构造的回文整数小于原数时，我们可以增大该回文整数的中间部分来缩小回文整数和原数的差距。例如，对于数 1239912399，我们将构造出回文整数 1232112321，实际上 1242112421 更接近原数。
+
+当我们增大构造的回文整数时，可能导致回文整数的位数变化。例如，对于数 998998，我们将构造出回文整数 999999，增大其中间部分将导致位数增加。得到的回文整数形如 100\dots 001100…001（10^{\textit{len}}+110 
+len
+ +1）。
+构造的回文整数等于原数时，由于题目约定，我们需要排除该回文整数，在其他的可能情况中寻找最近的回文整数。
+
+考虑到以上所有的可能，我们可以给出最终的方案：分别计算出以下每一种可能的方案对应的回文整数，在其中找到与原数最近且不等于原数的数即为答案。
+
+用原数的前半部分替换后半部分得到的回文整数。
+
+用原数的前半部分加一后的结果替换后半部分得到的回文整数。
+
+用原数的前半部分减一后的结果替换后半部分得到的回文整数。
+
+为防止位数变化导致构造的回文整数错误，因此直接构造 999\dots 999999…999 和 100\dots 001100…001 作为备选答案。
+
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/find-the-closest-palindrome/solution/xun-zhao-zui-jin-de-hui-wen-shu-by-leetc-biyt/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
